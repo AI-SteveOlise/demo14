@@ -1,0 +1,170 @@
+<odoo>
+    <data noupdate="0">
+	
+	<!-- 
+		<record id="stock_location_employee" model="stock.location">
+            <field name="name">Employees</field>
+            <field name="location_id" ref="stock.stock_location_locations_partner"/>
+            <field name="usage">customer</field>
+            <field name="company_id"></field>
+        </record>   
+        
+       <record id="stock_picking_type_emp" model="stock.picking.type">
+            <field name="name">Staff Store Requests</field>
+            <field name="code">internal</field>
+            <field name="use_create_lots">0</field>
+            <field name="use_existing_lots">1</field>
+            <field name="sequence_id" ref="seq_store_request"/>
+            <field name="default_location_src_id" ref="stock_location_employee"/>
+            <field name="default_location_dest_id" ref="stock_location_employee"/>
+            <field name="sequence_id">20</field>
+        </record>
+        
+        <record model="ir.actions.server" id="pick_stock_view">
+		    <field name="name">Stock Picking Server Action</field>
+		    <field name="model_id" ref="model_stock_picking"/>
+		    <field name="code">
+		        if record.picking_type_id.name == "Staff Store Requests":
+		            action = {
+		                "type": "ir.actions.act_window",
+		                "view_id": env.ref('topline.store_req_action1_window').id,
+		                "view_mode": "form",
+		                "res_model": "stock.picking",
+		                'res_id': record.id,
+		            }
+		    </field>
+		</record>
+        
+        <record id="seq_store_request" model="ir.sequence">
+        	<field name="name">Store Request</field>
+        	<field name="code">store.request</field>
+        	<field name="prefix">SR/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_service_order" model="ir.sequence">
+        	<field name="name">Service Order</field>
+        	<field name="code">service.order</field>
+        	<field name="prefix">SRV/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_project_code" model="ir.sequence">
+        	<field name="name">Project Code</field>
+        	<field name="code">project.code</field>
+        	<field name="prefix">TPL/PR/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_work_completion_certificate_code" model="ir.sequence">
+        	<field name="name">Work Completion Certificate Code</field>
+        	<field name="code">work.completion.certificate</field>
+        	<field name="prefix">WCC/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_asset_movement_code" model="ir.sequence">
+        	<field name="name">asset movement form Code</field>
+        	<field name="code">asset.movement.form</field>
+        	<field name="prefix">AM/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_waste_management_formt_code" model="ir.sequence">
+        	<field name="name">waste management form code</field>
+        	<field name="code">waste.management.form</field>
+        	<field name="prefix">WSM/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_journey_request" model="ir.sequence">
+        	<field name="name">Journey Request</field>
+        	<field name="code">journey.request</field>
+        	<field name="prefix">JR/%(year)s/</field>
+        	<field name="padding">4</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_receiving_inspection_report" model="ir.sequence">
+        	<field name="name">Receiving Inspection Report</field>
+        	<field name="code">receiving.inspection.report</field>
+        	<field name="prefix">RIR/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_atp_form" model="ir.sequence">
+        	<field name="name">Authorization to Purchase</field>
+        	<field name="code">atp.form</field>
+        	<field name="prefix">ATP/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_exp_ref" model="ir.sequence">
+        	<field name="name">Expense Ref</field>
+        	<field name="code">hr.expense</field>
+        	<field name="prefix">EXP/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_payment_req_ref" model="ir.sequence">
+        	<field name="name">Payment Requisition</field>
+        	<field name="code">payment.requisition</field>
+        	<field name="prefix">PAYR/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_cash_adv_ref" model="ir.sequence">
+        	<field name="name">Cash Advance</field>
+        	<field name="code">cash.advance.request</field>
+        	<field name="prefix">CSHADV/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_sal_adv_ref" model="ir.sequence">
+        	<field name="name">Salary Advance</field>
+        	<field name="code">salary.advance</field>
+        	<field name="prefix">SALADV/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_cash_retirement_ref" model="ir.sequence">
+        	<field name="name">Cash Retirement</field>
+        	<field name="code">cash.retirement</field>
+        	<field name="prefix">CSHRT/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_missing_asset_report_ref" model="ir.sequence">
+        	<field name="name">missing/stolen asset report</field>
+        	<field name="code">missing.stolen.asset.report</field>
+        	<field name="prefix">MSASTRP/%(year)s/</field>
+        	<field name="padding">4</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+         -->
+        
+        <record id="seq_discount_request_ref" model="ir.sequence">
+        	<field name="name">Discount Request</field>
+        	<field name="code">discount.request</field>
+        	<field name="prefix">DSR/%(year)s/</field>
+        	<field name="padding">3</field>
+        	<field name="company_id" eval="False"/>
+        </record>
+        
+        
+	</data>
+</odoo>

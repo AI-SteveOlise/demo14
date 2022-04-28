@@ -1,0 +1,145 @@
+<odoo>
+  <data>
+  	
+  	<!-- discount.request action-->
+    <record id="apdc_discount_request_action" model="ir.actions.act_window">
+		<field name="name">Discount Request</field>
+		<field name="res_model">discount.request</field>
+		<field name="view_mode">tree,form,pivot,kanban</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+  	
+  	<!-- discount.request tree view-->
+    <record id="apdc_discount_request_tree_view" model="ir.ui.view">
+		<field name="name">discount.request.tree</field>
+		<field name="model">discount.request</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<field name="name"/>
+			<field name="partner_id"/>
+			<field name="remark"/>
+			<field name="sale_order_id"/>
+			<field name="state"/>
+		</field>
+	</record>
+  	
+  	<record id="apdc_discount_request_form_view" model="ir.ui.view">
+	    <field name="name">discount.request.form</field>
+	    <field name="model">discount.request</field>
+	    <field name="priority" eval="2"/>
+	    <field name="arch" type="xml">
+        	<form string="Discount Request">
+	        	<header>
+	        		<button name="button_submit" states="draft" string="Submit" type="object"/>
+	        		<button name="button_approval" states="submit" string="Approve" type="object" class="btn-primary" groups="apdc.group_md"/>
+	        		<button name="button_reject" states="submit" string="Reject" type="object" class="btn-danger" groups="apdc.group_md"/>
+	        		<field name="state" widget="statusbar" statusbar_visible="draft,submit,approve"/>
+	        	</header>
+				<sheet>
+					
+					<div class="oe_title">
+                        <span class="o_form_label">Discount Request</span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+			 		<group col="4" colspan="4">
+			 			<field name="partner_id" />
+			 			<field name="date"/>
+			 			<field name="sale_order_id" readonly="1"/>
+			 		</group>
+			 		<field name="discount_request_line_ids" nolabel="1" widget="section_and_note_one2many">
+	                   <tree editable="bottom">
+	                   	   <field name="is_manager" invisible="1"/>
+	                       <field name="product_id"/>
+	                       <field name="name"/>
+	                       <field name="qty"/>
+	                       <field name="unit_price"/>
+	                       <field name="discount_request"/>
+	                       <field name="discount_approved" attrs="{'readonly':[('is_manager', '=', False)]}"/>
+	                       <field name="price_subtotal"/>
+	                   </tree>
+	               </field>
+	               <group class="oe_subtotal_footer oe_right">
+                        <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </group>
+				    <span>Remarks</span><br/>
+				    <field name="remark"/>
+				 </sheet>
+				 <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+        	</form>
+    	</field>
+    </record>
+  	
+	<record id="apdc_sale_order_form" model="ir.ui.view">
+	    <field name="name">apdc.sale.order</field>
+	    <field name="model">sale.order</field>
+	    <field name="inherit_id" ref="sale.view_order_form"/>
+	    <field name="arch" type="xml">
+	    	<field name="payment_term_id" position="after">
+			  	<field name="discount_request" invisible="1"/>
+			</field>
+	    	<xpath expr="//button[@name='action_cancel']" position="after">
+        		<button name="create_discount_request" type="object" string="Generate Discount Request" class="oe_highlight"/>
+        	</xpath>
+        	<xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="before">
+	    		<field name="house_type"/>
+	    		<field name="house_category"/>
+           	</xpath>
+        	<!-- <xpath expr="//field[@name='order_line']/tree/field[@name='discount']" position="replace">
+	    		<field name="discount" readonly="1" class="oe_inline"/> %
+           	</xpath>
+	    	<xpath expr="//field[@name='order_line']/tree/field[@name='discount']" position="replace">
+	    		<field name="discount" attrs="{'readonly': [('parent.discount_request', '=', False)]}" class="oe_inline"/> %
+           	</xpath>-->
+	    </field>
+	</record>
+	
+	<record id="apdc_product_product_template_only_form_view" model="ir.ui.view">
+	    <field name="name">apdc.product.template</field>
+	    <field name="model">product.template</field>
+	    <field name="inherit_id" ref="product.product_template_only_form_view"/>
+	    <field name="arch" type="xml">
+	    	<field name="barcode" position="after">
+			  	<field name="house_type"/>
+			</field>
+	    </field>
+	</record>
+	
+	<record id="apdc_account_view_invoice_tree" model="ir.ui.view">
+	    <field name="name">apdc.account.move</field>
+	    <field name="model">account.move</field>
+	    <field name="inherit_id" ref="account.view_invoice_tree"/>
+	    <field name="arch" type="xml">
+	    	<field name="state" position="before">
+			  	<field name="amount_paid"/>
+			  	<field name="percentage_amount_paid" widget="progressbar" string="Percentage"/>
+			</field>
+	    </field>
+	</record>
+  	
+  	<menuitem name="Discount Requests" id="topline_discount_requests_menu" 
+  			  parent="sale.sale_order_menu"
+              action="apdc_discount_request_action"/>
+  
+  <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>crm.lead</value>
+            <value eval="[
+                'contact_name',
+                'description',
+                'email_from',
+                'name',
+                'street',
+                'partner_name',
+                'phone',
+                'image',
+            ]"/>
+        </function>
+  
+ </data>
+</odoo>
